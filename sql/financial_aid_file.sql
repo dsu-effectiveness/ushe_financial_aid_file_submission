@@ -40,7 +40,7 @@ from export.student_term_level_version a
     left join export.student_financial_aid_year_fund_term_detail b on b.student_id = a.student_id and b.term_id = a.term_id
     left join export.student c on c.student_id = b.student_id
     left join export.term d on d.term_id = b.term_id
-where b.financial_aid_year_id = :aid_year  --('1819' - is the 2019 academic year)
-  and b.amount_offered > '0'
+--where b.financial_aid_year_id = :aid_year  --('1819' - is the 2019 academic year)
+  WHERE b.amount_offered > '0'
   and version_desc in ('Census', 'End of Term')
 Order by b.student_id, term;
