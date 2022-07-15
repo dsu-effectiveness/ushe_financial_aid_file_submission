@@ -30,18 +30,34 @@ library(usheUtils)
 ```{r}
 financial_aid <- utHelpR::get_data_from_sql_file(file_name="financial_aid_file.sql",
                                                dsn="edify",
-                                               context="sandbox")
+                                               context="project")
 ```
 
 Now we filter the term and version of the course sql
+
+
 ```{r}
-term <- '202220'
-version <- 'Current'
 
-summer_course_file <- course_file %>% 
-  filter(term_id == term & version_desc == version)
+fin_aid_file <- function(input_df, fin_aid_year) {
+  output_df <- input_df %>% 
+  filter(year == (fin_aid_year)) 
+ 
+return(output_df)
+         
+  }
+```
 
+format to ushe for 2019
+```{r}
+write.table((fin_aid_file(financial_aid, '2019')), sep = "|", file = here::here("sensitive", "ut-fa-2019.txt"), row.names = FALSE, col.names = FALSE, quote = FALSE)
+```
 
+format to ushe for 2020
+```{r}
+write.table((fin_aid_file(financial_aid, '2020')), sep = "|", file = here::here("sensitive", "ut-fa-2020.txt"), row.names = FALSE, col.names = FALSE, quote = FALSE)
+```
 
-#DT::datatable(student_file, rownames=FALSE)
+format to ushe for 2021
+```{r}
+write.table((fin_aid_file(financial_aid, '2021')), sep = "|", file = here::here("sensitive", "ut-fa-2021.txt"), row.names = FALSE, col.names = FALSE, quote = FALSE)
 ```
