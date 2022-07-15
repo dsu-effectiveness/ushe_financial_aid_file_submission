@@ -2,3 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
+/sensitive
+markdown/project_documentation_cache
+markdown/project_documentation_files
