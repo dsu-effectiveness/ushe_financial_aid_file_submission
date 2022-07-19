@@ -48,7 +48,10 @@ fin_aid_file <- function(input_df, financial_aid_year) {
     mutate(f_id = case_when(
      f_id == "" ~ banner_id,
      TRUE ~ f_id)) %>% 
-    select(-financial_aid_year_id)
+    select(-financial_aid_year_id) %>% 
+  group_by(inst_id, year, term, f_id, banner_id, financial_aid_type) %>% 
+  summarise(financial_aid_amount = sum(financial_aid_amount)) %>% 
+    ungroup()
   
 return(output_df)
          
