@@ -25,6 +25,7 @@ library(lubridate)
 library(utHelpR)
 library(usheUtils)
 library(readr)
+library(janitor)
 ```
 
 ###  Here we pull the info from edify with the utHelp function
@@ -38,26 +39,37 @@ Here is a function that pulls in the data frame and the financial year
 
 ```{r}
 
-fin_aid_file <- function(input_df, fin_aid_year) {
+fin_aid_file <- function(input_df, financial_aid_year) {
   output_df <- input_df %>% 
-  filter(year == (fin_aid_year)) %>% 
+  filter(financial_aid_year_id == (financial_aid_year)) %>%
     mutate(term = substring(term, 5, 5)) %>%
     mutate(f_id = str_remove_all(f_id, "-")) %>% 
-    mutate(banner_id = paste0("D", banner_id)) 
- 
+    mutate(banner_id = paste0("D", banner_id)) %>%
+    mutate(f_id = case_when(
+     f_id == "" ~ banner_id,
+     TRUE ~ f_id)) %>% 
+    select(-financial_aid_year_id)
+  
 return(output_df)
          
   }
 ```
 
+check for duplicates 
+```{r}
+ check_for_duplicates <- fin_aid_file(financial_aid, '1819') %>% 
+  get_dupes(inst_id, year, term, f_id, banner_id, financial_aid_type, financial_aid_amount) 
+
+```
+
 format to ushe for 2019
 ```{r}
-write.table((fin_aid_file(financial_aid, '2019')), sep = "|", file = here::here("sensitive", "ut-fa-2019.txt"), row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table((fin_aid_file(financial_aid, '1819')), sep = "|", file = here::here("sensitive", "ut-fa-2019.txt"), row.names = FALSE, col.names = FALSE, quote = FALSE)
 ```
 
 format to ushe for 2020
 ```{r}
-write.table((fin_aid_file(financial_aid, '2020')), sep = "|", file = here::here("sensitive", "ut-fa-2020.txt"), row.names = FALSE, col.names = FALSE, quote = FALSE)
+write.table((fin_aid_file(financial_aid, '1920')), sep = "|", file = here::here("sensitive", "ut-fa-2020.txt"), row.names = FALSE, col.names = FALSE, quote = FALSE)
 ```
 
 format to ushe for 2021
