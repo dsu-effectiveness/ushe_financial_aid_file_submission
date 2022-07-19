@@ -35,6 +35,7 @@ financial_aid <- utHelpR::get_data_from_sql_file(file_name="financial_aid_file.s
                                                context="project")
 ```
 
+
 Here is a function that pulls in the data frame and the financial year
 
 ```{r}
@@ -48,70 +49,20 @@ fin_aid_file <- function(input_df, financial_aid_year) {
     mutate(f_id = case_when(
      f_id == "" ~ banner_id,
      TRUE ~ f_id)) %>%
-    mutate(join_all = paste0(inst_id, year, term, f_id, banner_id, financial_aid_type)) %>%
-    group_by(join_all) %>%
-    summarise(financial_aid_amount) %>%
+  group_by(inst_id, year, term, f_id, banner_id, financial_aid_type) %>% 
+  summarise(financial_aid_amount = sum(financial_aid_amount)) %>% 
+    ungroup()
 
 return(output_df)
          
   }
 ```
-
-```{r}
-fin_aid_file_2 <- function(input_df, financial_aid_year) {
-  output_df <- input_df %>% 
-  filter(financial_aid_year_id == (financial_aid_year)) %>%
-    mutate(term = substring(term, 5, 5)) %>%
-    mutate(f_id = str_remove_all(f_id, "-")) %>% 
-    mutate(banner_id = paste0("D", banner_id)) %>%
-    mutate(f_id = case_when(
-     f_id == "" ~ banner_id,
-     TRUE ~ f_id)) %>%
-    mutate(join_all = paste0(inst_id, year, term, f_id, banner_id, financial_aid_type))
-
-
-return(output_df)
-         
-  }
-
-
-```
-
-```{r}
-test_df_2 <- fin_aid_file_2(financial_aid, '1819')
-
-test_df <- fin_aid_file(financial_aid, '1819')
-
-view(test_df)
-view(test_df_2)
-
-```
-
-```{r}
-test_df_3 <- test_df %>%
-  select(financial_aid_amount) %>% 
-  left_join(test_df_2, by=c("join_all" = "join_all")) %>%
-  ungroup %>% 
-  select(-join_all) %>%
-  select(inst_id, year, term, f_id, banner_id, financial_aid_type, financial_aid_amount.x)
-
-
-view(test_df_3)
-```
-
-```{r}
-test_df_4 <- test_df_3 %>%
-  select(inst_id, year, term, f_id, banner_id, financial_aid_type, financial_aid_amount.x) %>% 
-view(test_df_4)
-```
-
-
 
 check for duplicates 
 ```{r}
  check_for_duplicates <- fin_aid_file(financial_aid, '1819') %>% 
- get_dupes(join_all) 
-#get_dupes(inst_id, year, term, f_id, banner_id, financial_aid_type) 
+get_dupes(inst_id, year, term, f_id, banner_id, financial_aid_type) 
+
 view(check_for_duplicates)
 ```
 
