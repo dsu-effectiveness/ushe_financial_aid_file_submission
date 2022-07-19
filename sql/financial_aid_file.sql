@@ -35,7 +35,8 @@ CASE WHEN financial_aid_fund_id = 'UADLRN' THEN 'ALEARN'
      WHEN financial_aid_fund_id in ('FCWS','FCWSA') THEN 'WORK'
      ELSE 'IANNB'
      END "financial_aid_type",
-     b.amount_offered as financial_aid_amount
+     b.amount_offered as financial_aid_amount,
+     b.financial_aid_year_id
 from export.student_term_level_version a
     left join export.student_financial_aid_year_fund_term_detail b on b.student_id = a.student_id and b.term_id = a.term_id
     left join export.student c on c.student_id = b.student_id
