@@ -66,17 +66,17 @@ check for duplicates
 ```
 
 format to ushe for 2019
-```{r}
+```{r warning=FALSE}
 write.table((fin_aid_file(financial_aid, '1819')), sep = "|", file = here::here("sensitive", "ut-fa-2019.txt"), row.names = FALSE, col.names = FALSE, quote = FALSE)
 ```
 
 format to ushe for 2020
-```{r}
+```{r warning=FALSE}
 write.table((fin_aid_file(financial_aid, '1920')), sep = "|", file = here::here("sensitive", "ut-fa-2020.txt"), row.names = FALSE, col.names = FALSE, quote = FALSE)
 ```
 
 format to ushe for 2021
-```{r}
+```{r warning=FALSE}
 write.table((fin_aid_file(financial_aid, '2021')), sep = "|", file = here::here("sensitive", "ut-fa-2021.txt"), row.names = FALSE, col.names = FALSE, quote = FALSE)
 ```
 
