@@ -40,13 +40,15 @@ Here is a function that pulls in the data frame and the financial year
 ```{r}
 
 fin_aid_file <- function(input_df, financial_aid_year) {
+  
   output_df <- input_df %>% 
-  filter(financial_aid_year_id == (financial_aid_year)) %>%
+    filter(financial_aid_year_id == (financial_aid_year)) %>%
     mutate(term = substring(term, 5, 5)) %>%
+    mutate(year = ifelse(term == "1", as.numeric(year) + 1, year)) %>% 
     mutate(f_id = str_remove_all(f_id, "-")) %>% 
     mutate(banner_id = paste0("D", banner_id)) %>%
     mutate(f_id = case_when(
-     f_id == "" ~ banner_id,
+     is.na(f_id) == TRUE ~ banner_id,
      TRUE ~ f_id)) %>% 
     select(-financial_aid_year_id) %>% 
   group_by(inst_id, year, term, f_id, banner_id, financial_aid_type) %>% 
@@ -64,6 +66,14 @@ check for duplicates
   get_dupes(inst_id, year, term, f_id, banner_id, financial_aid_type, financial_aid_amount) 
 
 ```
+
+check for other mistakes
+```{r}
+check_for_mistakes <- fin_aid_file(financial_aid, '1819')
+
+view(check_for_mistakes)
+```
+
 
 format to ushe for 2019
 ```{r warning=FALSE}
